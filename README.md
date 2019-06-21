@@ -1,43 +1,70 @@
-# Omniauth::Faceit
+# OmniAuth FACEIT
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/omniauth/faceit`. To experiment with that code, run `bin/console` for an interactive prompt.
+This gem is an OmniAuth 2.0 strategy, supporting the FACEIT provider.
 
-TODO: Delete this and the text above, and describe your gem
+## Usage
 
-## Installation
-
-Add this line to your application's Gemfile:
+Add to your `Gemfile`:
 
 ```ruby
 gem 'omniauth-faceit'
 ```
 
-And then execute:
+And then integrate the strategy into your middleware:
 
-    $ bundle
+```ruby
+use OmniAuth::Builder do
+  provider :face_it, "my-face-it-oauth-id", "my-face-it-oauth-secret"
+end
+```
 
-Or install it yourself as:
+If you are using Rails, you may want to add it to the middleware stack:
 
-    $ gem install omniauth-faceit
+```ruby
+Rails.application.config.middleware.use OmniAuth::Builder do
+  provider :face_it, ENV['FACE_IT_APP_ID'], ENV['FACE_IT_SECRET']
+end
+```
 
-## Usage
+Instructions on how to set oAuth2 protocol to link FACEIT can be found on [this page](https://developers.faceit.com/docs/auth/oauth2).
 
-TODO: Write usage instructions here
 
-## Development
+For additional information, please refer to the [OmniAuth wiki](https://github.com/intridea/omniauth/wiki).
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+## Authentication Hash
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Here's an example of the *Authentication Hash* available in `request.env['omniauth.auth']`
 
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/omniauth-faceit. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Omniauth::Faceit project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/omniauth-faceit/blob/master/CODE_OF_CONDUCT.md).
+```ruby
+{
+  "credentials" => {
+    "expires" => true,
+    "expires_at" => 1560425337,
+    "refresh_token" => "ffcde420-de56-46dd-9944-37c06b0772f9",
+    "token" => "6651de74-8146-466a-8ab7-72c783e38c34"
+  },
+  "extra" => {},
+  "info" => {
+    "email" => "inqify@gmail.com",
+    "uid" => {
+      "aud" => "10e6f1bb-a419-4f7c-a6b5-cf59c0c2cf2a",
+      "birthdate" => "21/06/1993",
+      "email" => "inqify@gmail.com",
+      "email_verified" => false,
+      "family_name" => "Burdaev",
+      "given_name" => "Evgeniy",
+      "guid" => "8c1f968b-4f45-4c1e-b932-754e793dba86",
+      "iss" => "https://api.faceit.com/auth",
+      "locale" => "ru",
+      "membership" => "free",
+      "memberships" => [
+        "free"
+      ],
+      "nickname" => "inqify",
+      "picture" => "https://cdn.faceit.com/oauth/icons/default.jpg"
+    }
+  },
+  "provider" => :face_it,
+  "uid" => nil
+}
+```
